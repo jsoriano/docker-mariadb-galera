@@ -13,6 +13,7 @@ RUN apt-get install -y --force-yes mariadb-galera-server galera
 ADD conf.d /etc/mysql/conf.d
 
 ADD entrypoint.sh /entrypoint.sh
-CMD "/entrypoint.sh"
+
+ENTRYPOINT "/entrypoint.sh"
 
 EXPOSE 3306
