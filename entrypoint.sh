@@ -1,10 +1,11 @@
 #!/bin/bash
 
+MARIADB_NODE_NAME=${MARIADB_NODE_NAME-$(hostname)}
 MARIADB_CLUSTER_ADDRESS=${MARIADB_CLUSTER_ADDRESS-gcomm://}
 MARIADB_REPLICATION_USER=${MARIADB_REPLICATION_USER-replication}
 MARIADB_SERVER_ID=${MARIADB_SERVER_ID-$(perl -e "print hex('$(hostname | md5sum | cut -c-8)')")}
 MARIADB_SST_METHOD=${MARIADB_SST_METHOD-xtrabackup-v2}
-MARIADB_NODE_ADDRESS=$(head -1 /etc/hosts | awk '{ print $1 }')
+MARIADB_NODE_ADDRESS=${MARIADB_NODE_ADDRESS-$(head -1 /etc/hosts | awk '{ print $1 }')}
 MARIADB_SST_RECEIVE_ADDRESS=${MARIADB_SST_RECEIVE_ADDRESS-$MARIADB_NODE_ADDRESS}
 
 if [ "$MARIADB_CLUSTER_ADDRESS" = "gcomm://" ]; then
@@ -39,7 +40,7 @@ cat <<EOF > /etc/mysql/conf.d/galera-node.cnf
 [mysqld]
 server-id=$MARIADB_SERVER_ID
 wsrep_node_address="$MARIADB_NODE_ADDRESS"
-wsrep_node_name="$(hostname)"
+wsrep_node_name="$MARIADB_NODE_NAME"
 
 wsrep_cluster_name="$MARIADB_CLUSTER_NAME"
 wsrep_cluster_address="$MARIADB_CLUSTER_ADDRESS"
